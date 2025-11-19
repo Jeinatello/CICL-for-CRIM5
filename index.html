@@ -257,7 +257,7 @@ let scenes = {
 
     leoDuties: {
         name: "LEO",
-        text: "As a Law Enforcement Officer, I have duties to be complied: (1) Determine age; (2) Inform parents/guardian, PAO, LSWDO; (3) Bring the child for medico-legal; (4) Turn over to WCPD within 8 hours.",
+        text: "As a Law Enforcement Officer (LEO), I have duties to be complied: (1) Determine age; (2) Inform parents/guardian, PAO, LSWDO; (3) Bring the child for medico-legal; (4) Turn over to WCPD within 8 hours.",
         bg: "bg_police_station.png",
         char: ["leo.png"],
         choices: [{ text: "Proceed to WCPD", next: "wcpd" }]
@@ -278,7 +278,7 @@ let scenes = {
         char: ["socialworker.png"],
         choices: [
             { text: "15 and below", next: "age15below" },
-            { text: "15 to below 18", next: "age15to18" }
+            { text: "15 and above but below 18", next: "age15to18" }
         ]
     },
 
@@ -313,7 +313,7 @@ let scenes = {
 
     age15to18: {
         name: "Social Worker",
-        text: "The child is between 15 and below 18. Now determine DISCERNMENT:",
+        text: "The child is 15 above but below 18. Now determine DISCERNMENT:",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
