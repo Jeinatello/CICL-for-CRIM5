@@ -582,6 +582,59 @@ function show(scene) {
     }
     
 /* ======================= TITLE SCREEN → START → COMIC ======================= */
+function show(scene) {
+    let s = scenes[scene];
+    if (!s) return;
+
+    let dialog = document.getElementById("dialogue-box");
+    dialog.classList.remove("visible");
+
+    setTimeout(() => {
+        document.getElementById("name").innerText = s.name || "";
+        document.getElementById("text").innerText = s.text || "";
+
+        let choicesDiv = document.getElementById("choices");
+        choicesDiv.innerHTML = "";
+        if (s.choices) {
+            s.choices.forEach(choice => {
+                let btn = document.createElement("div");
+                btn.className = "choice";
+                btn.innerText = choice.text;
+                btn.onclick = () => { previousScene = scene; show(choice.next); };
+                choicesDiv.appendChild(btn);
+            });
+        }
+
+        let extra = document.getElementById("extra-buttons");
+        extra.innerHTML = "";
+        if (previousScene && previousScene !== scene) {
+            let backBtn = document.createElement("div");
+            backBtn.className = "extra-btn";
+            backBtn.innerText = "Back";
+            backBtn.onclick = () => show(previousScene);
+            extra.appendChild(backBtn);
+        }
+
+        dialog.classList.add("visible");
+    }, 300);
+
+    document.getElementById("game-container").style.backgroundImage = `url(${s.bg})`;
+
+    let chars = document.getElementById("characters-container");
+    chars.innerHTML = "";
+    if (s.char) {
+        s.char.forEach((src, i) => {
+            let img = document.createElement("img");
+            img.src = src;
+            img.className = "character-img";
+            img.style.left = `${40 + i * 250}px`;
+            chars.appendChild(img);
+            setTimeout(() => img.classList.add("show"), 50 + i * 150);
+        });
+    }
+}
+
+// ======================= START GAME & COMIC =======================
 function startGame() {
     let title = document.getElementById("title-screen");
     title.classList.add("hidden");
@@ -624,9 +677,7 @@ function startGame() {
         } else {
             comic.style.opacity = "0";
             comic.style.pointerEvents = "none";
-            setTimeout(() => {
-                show("start");
-            }, 500);
+            setTimeout(() => { show("start"); }, 500);
         }
     };
 }
