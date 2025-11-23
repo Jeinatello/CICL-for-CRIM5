@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>CICL Simulation – RA 9344 & 10630</title>
-
 <style>
 body {
     margin: 0;
@@ -180,14 +179,13 @@ body {
 }
 
 #comic-slideshow img {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 80%;
+    max-height: 60%;
     object-fit: contain;
-    border: none !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
     transition: opacity 0.6s ease;
-    opacity: 1;
 }
 </style>
 </head>
@@ -197,18 +195,17 @@ body {
 
     <!-- ============================== TITLE SCREEN ================================ -->
     <div id="title-screen">
-    <div id="title-title">Process of Handling a CICL</div>
-    <div id="title-sub">A Guided Simulation of RA 9344 & 10630 Procedures</div>
+        <div id="title-title">Process of Handling a CICL</div>
+        <div id="title-sub">A Guided Simulation of RA 9344 & 10630 Procedures</div>
+        <div id="start-button" onclick="startGame()">START</div>
+    </div>
 
-    <div id="start-button" onclick="startGame()">START</div>
-</div>
-
-<!-- COMIC SLIDESHOW -->
-<div id="comic-slideshow">
-    <img id="comic-image" src="" style="max-width:80%; max-height:60%; border:3px solid #fff; border-radius:8px; margin-bottom:20px;">
-    <div id="comic-caption" style="font-size:20px; margin-bottom:20px;"></div>
-    <div id="comic-next" style="background:#66c2ff; color:#000; padding:12px 25px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:18px;">NEXT</div>
-</div>
+    <!-- COMIC SLIDESHOW -->
+    <div id="comic-slideshow">
+        <img id="comic-image" src="">
+        <div id="comic-caption"></div>
+        <div id="comic-next">NEXT</div>
+    </div>
 
     <!-- Game Area -->
     <div id="characters-container"></div>
@@ -221,7 +218,6 @@ body {
 </div>
 
 <script>
-
 /* ======================= COMIC SLIDES ======================= */
 const comicSlides = [
     { img: "comic1.png", caption: "A child has been reported for an incident in the community." },
@@ -584,8 +580,7 @@ function show(scene) {
             setTimeout(() => img.classList.add("show"), 50 + i * 150);
         });
     }
-}
-
+    
 /* ======================= TITLE SCREEN → START → COMIC ======================= */
 function startGame() {
     let title = document.getElementById("title-screen");
@@ -596,41 +591,33 @@ function startGame() {
     let comicCaption = document.getElementById("comic-caption");
     let nextBtn = document.getElementById("comic-next");
     let currentSlide = 0;
+    let isTransitioning = false;
 
     comic.style.opacity = "1";
     comic.style.pointerEvents = "auto";
 
     function showSlide(index) {
-    const newSrc = comicSlides[index].img;
-    const newCaption = comicSlides[index].caption;
+        if (isTransitioning) return;
+        isTransitioning = true;
 
-    comicImage.style.opacity = 0;
-    comicCaption.style.opacity = 0;
+        comicImage.style.opacity = 0;
+        comicCaption.style.opacity = 0;
 
-    setTimeout(() => {
-        comicImage.src = newSrc;
-        comicCaption.innerText = newCaption;
+        setTimeout(() => {
+            comicImage.src = comicSlides[index].img;
+            comicCaption.innerText = comicSlides[index].caption;
 
-        comicImage.style.opacity = 1;
-        comicCaption.style.opacity = 1;
-    }, 600);
-}
-    // Fade out current image
-    comicImage.style.opacity = 0;
+            comicImage.style.opacity = 1;
+            comicCaption.style.opacity = 1;
 
-    setTimeout(() => {
-        // Change image and caption
-        comicImage.src = newSrc;
-        comicCaption.innerText = newCaption;
-
-        // Fade in new image
-        comicImage.style.opacity = 1;
-    }, 600);
-}
+            setTimeout(() => { isTransitioning = false; }, 600);
+        }, 400);
+    }
 
     showSlide(currentSlide);
 
     nextBtn.onclick = () => {
+        if (isTransitioning) return;
         currentSlide++;
         if (currentSlide < comicSlides.length) {
             showSlide(currentSlide);
@@ -643,7 +630,6 @@ function startGame() {
         }
     };
 }
-
 </script>
 
 </body>
