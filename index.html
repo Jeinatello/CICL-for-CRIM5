@@ -80,32 +80,15 @@ body {
 }
 
 /* --- TITLE SCREEN LOGOS --- */
-#logo-container {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    display: flex;
-    gap: 15px;
-}
-
-.logo-placeholder {
-    width: 80px;
-    height: 80px;
-    background: rgba(255,255,255,0.12);
-    border: 2px dashed rgba(255,255,255,0.32);
-    border-radius: 10px;
+#logo-container img.logo-placeholder {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 /* --- CHILD CHARACTER RIGHT SIDE --- */
 #child-placeholder {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 140px;
-    height: 180px;
-    background: rgba(255,255,255,0.12);
-    border: 2px dashed rgba(255,255,255,0.32);
-    border-radius: 10px;
+    display: none;
 }
 
 /* --- Characters --- */
@@ -192,8 +175,31 @@ body {
 }
 
 /* --- COMIC SLIDESHOW --- */
+#comic-slideshow {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
 #comic-slideshow img {
-    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    transition: opacity 0.6s ease;
+    opacity: 1;
 }
 </style>
 </head>
@@ -616,9 +622,21 @@ function startGame() {
     comic.style.pointerEvents = "auto";
 
     function showSlide(index) {
-        comicImage.src = comicSlides[index].img;
-        comicCaption.innerText = comicSlides[index].caption;
-    }
+    const newSrc = comicSlides[index].img;
+    const newCaption = comicSlides[index].caption;
+    
+    // Fade out current image
+    comicImage.style.opacity = 0;
+
+    setTimeout(() => {
+        // Change image and caption
+        comicImage.src = newSrc;
+        comicCaption.innerText = newCaption;
+
+        // Fade in new image
+        comicImage.style.opacity = 1;
+    }, 600);
+}
 
     showSlide(currentSlide);
 
