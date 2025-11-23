@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>CICL Simulation – RA 9344 & 10630</title>
@@ -11,7 +11,6 @@
         color: #fff;
         overflow: hidden;
     }
-
     #game-container {
         width: 900px;
         height: 600px;
@@ -25,8 +24,6 @@
         transition: background-image 1s ease-in-out;
         box-shadow: 0 0 25px #000;
     }
-
-    /* TITLE SCREEN */
     #title-screen {
         position: absolute;
         inset: 0;
@@ -40,25 +37,18 @@
         opacity: 1;
         transition: opacity 0.8s ease;
     }
-
-    #title-screen.hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
-
+    #title-screen.hidden { opacity: 0; pointer-events: none; }
     #title-title {
         font-size: 36px;
         font-weight: bold;
         text-shadow: 0 0 10px #000;
         margin-bottom: 20px;
     }
-
     #title-sub {
         font-size: 20px;
         opacity: 0.85;
         margin-bottom: 40px;
     }
-
     #start-button {
         background: #66c2ff;
         color: #000;
@@ -70,19 +60,12 @@
         box-shadow: 0 0 12px #66c2ff;
         transition: 0.3s;
     }
-
     #start-button:hover {
         background: #a7e0ff;
         transform: translateY(-3px);
         box-shadow: 0 0 20px #a7e0ff;
     }
-
-    /* CHARACTERS */
-    #characters-container {
-        position: absolute;
-        inset: 0;
-    }
-
+    #characters-container { position: absolute; bottom: 0; width: 100%; height: 75%; }
     .character-img {
         position: absolute;
         bottom: 0;
@@ -91,13 +74,7 @@
         transition: opacity 0.8s ease, transform 0.8s ease;
         transform: translateY(20px);
     }
-
-    .character-img.show {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-
-    /* DIALOGUE */
+    .character-img.show { opacity: 1; transform: translateY(0px); }
     #dialogue-box {
         position: absolute;
         bottom: 0;
@@ -111,26 +88,9 @@
         transform: translateY(20px);
         transition: opacity .6s ease, transform .6s ease;
     }
-
-    #dialogue-box.visible {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-
-    #name {
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: #66c2ff;
-        text-shadow: 0 0 6px #000;
-    }
-
-    #text {
-        font-size: 18px;
-        margin-bottom: 14px;
-        line-height: 1.45;
-    }
-
+    #dialogue-box.visible { opacity: 1; transform: translateY(0px); }
+    #name { font-size: 22px; font-weight: bold; margin-bottom: 8px; color: #66c2ff; text-shadow: 0 0 6px #000; }
+    #text { font-size: 18px; margin-bottom: 14px; line-height: 1.45; }
     .choice {
         background: rgba(255,255,255,0.12);
         padding: 10px;
@@ -140,12 +100,8 @@
         transition: 0.3s;
         border-left: 4px solid #66c2ff;
     }
-
-    .choice:hover {
-        background: rgba(255,255,255,0.28);
-        transform: translateX(4px);
-    }
-
+    .choice:hover { background: rgba(255,255,255,0.28); transform: translateX(4px); }
+    #extra-buttons { margin-top: 10px; }
     .extra-btn {
         background: rgba(255,255,255,0.15);
         color: #fff;
@@ -158,106 +114,80 @@
         transition: 0.3s;
         border: 1px solid rgba(255,255,255,0.15);
     }
+    .extra-btn:hover { background: rgba(255,255,255,0.30); }
 
-    .extra-btn:hover {
-        background: rgba(255,255,255,0.30);
+    /* Map Panel */
+    #map-panel {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 180px;
+        max-height: 400px;
+        background: rgba(0,0,0,0.75);
+        border: 2px solid #66c2ff;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: max-height 0.4s ease, opacity 0.4s ease;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 25;
     }
+    #map-panel.open { max-height: 400px; opacity: 1; pointer-events: all; }
+    #map-header {
+        background: #66c2ff;
+        color: #000;
+        font-weight: bold;
+        padding: 8px;
+        cursor: pointer;
+        text-align: center;
+    }
+    #map-buttons { padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+    .map-btn {
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+        padding: 6px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 14px;
+        transition: 0.3s;
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+    .map-btn:hover { background: rgba(255,255,255,0.30); }
 
-    /* COMIC SLIDESHOW */
+    /* Comic Slideshow */
     #comic-container {
         position: absolute;
         inset: 0;
         display: none;
-        align-items: center;
         justify-content: center;
-        background: black;
-        z-index: 50;
+        align-items: center;
+        background: #000;
+        z-index: 30;
     }
-
     .comic-slide {
         position: absolute;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        background-size: cover;
+        background-position: center;
         opacity: 0;
         transition: opacity 0.5s ease;
     }
-
-    .comic-slide.show {
-        opacity: 1;
-    }
-
-    /* MAP */
-    #map-button {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(255,255,255,0.85);
-        color: black;
-        padding: 10px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        z-index: 50;
-        border: 2px solid black;
-    }
-
-    #map-panel {
-        position: absolute;
-        top: 0;
-        right: -280px;
-        width: 260px;
-        height: 100%;
-        background: rgba(10,10,10,0.96);
-        color: white;
-        padding: 20px;
-        box-shadow: -3px 0 10px rgba(0,0,0,0.6);
-        z-index: 60;
-        transition: right 0.4s ease;
-    }
-
-    #map-panel.open {
-        right: 0;
-    }
-
-    .map-title {
-        font-size: 22px;
-        margin-bottom: 15px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .map-item {
-        padding: 10px;
-        margin-bottom: 8px;
-        background: rgba(255,255,255,0.12);
-        border-left: 3px solid #66c2ff;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .map-item:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateX(4px);
-    }
-
+    .comic-slide.show { opacity: 1; }
 </style>
 </head>
 <body>
-<div id="game-container">
 
-    <!-- TITLE SCREEN -->
+<div id="game-container">
     <div id="title-screen">
         <div id="title-title">Process of Handling a CICL</div>
         <div id="title-sub">A Guided Simulation of RA 9344 & 10630 Procedures</div>
         <div id="start-button" onclick="startGame()">START</div>
     </div>
 
-    <!-- CHARACTERS -->
     <div id="characters-container"></div>
 
-    <!-- DIALOGUE BOX -->
     <div id="dialogue-box">
         <div id="name"></div>
         <div id="text"></div>
@@ -265,449 +195,239 @@
         <div id="extra-buttons"></div>
     </div>
 
-    <!-- COMIC SLIDESHOW -->
+    <!-- Comic Slideshow -->
     <div id="comic-container">
-        <img id="comic1" class="comic-slide" src="comic1.png">
-        <img id="comic2" class="comic-slide" src="comic2.png">
-        <img id="comic3" class="comic-slide" src="comic3.png">
+        <div id="comic1" class="comic-slide" style="background-image:url('comic1.png')"></div>
+        <div id="comic2" class="comic-slide" style="background-image:url('comic2.png')"></div>
+        <div id="comic3" class="comic-slide" style="background-image:url('comic3.png')"></div>
     </div>
 
-    <!-- MAP -->
-    <div id="map-button" onclick="toggleMap()">🗺️ Map</div>
+    <!-- Collapsible Map Panel -->
     <div id="map-panel">
-        <div class="map-title">SCENERY MAP</div>
-        <div class="map-item" onclick="gotoScene('start')">Community</div>
-        <div class="map-item" onclick="gotoScene('leoContact')">Street / Initial Contact</div>
-        <div class="map-item" onclick="gotoScene('leoDuties')">Police Station / LEO Duties</div>
-        <div class="map-item" onclick="gotoScene('wcpd')">WCPD</div>
-        <div class="map-item" onclick="gotoScene('ageSelect')">Age Determination</div>
-        <div class="map-item" onclick="gotoScene('withDiscernment')">Discernment Check</div>
-        <div class="map-item" onclick="gotoScene('nonSerious')">Diversion Evaluation</div>
-        <div class="map-item" onclick="gotoScene('seriousSelectAge')">Serious Crime Path</div>
-        <div class="map-item" onclick="gotoScene('prosecutionStart')">Prosecutor’s Office</div>
-        <div class="map-item" onclick="gotoScene('court')">Family Court</div>
-        <div class="map-item" onclick="gotoScene('continueYRC')">Youth Rehab / Penal Farm</div>
-        <div class="map-item" onclick="gotoScene('simulationEnd')">Simulation End</div>
+        <div id="map-header" onclick="toggleMap()">📍 Scene Map</div>
+        <div id="map-buttons"></div>
     </div>
 </div>
 
 <script>
+/* SCENES */
 let previousScene = null;
-
-/* ==========================================================
-   SCENES
-========================================================== */
 let scenes = {
-    start: {
-        name: "Lazo",
-        text: "A Child has reportedly committed an offense. You will now simulate the CICL procedures under RA 9344 & 10630.",
-        bg: "bg_community.png",
-        char: ["narrator.png"],
-        choices: [
-            { text: "Begin Simulation", next: "leoContact" }
-        ]
-    },
-
-    leoContact: {
-        name: "LEO",
-        text: "I approached the child calmly. I must avoid intimidation and introduce myself as Ate/Kuya.",
-        bg: "bg_street_leo.png",
-        char: ["leo.png"],
-        choices: [{ text: "Perform LEO Duties", next: "leoDuties" }]
-    },
-
-    leoDuties: {
-        name: "LEO",
-        text: "As a Law Enforcement Officer (LEO), I have duties to be complied. First will be Age Determination:",
-        bg: "bg_police_station.png",
-        char: ["leo.png"],
-        choices: [
-            { text: "Birth Certificate", next: "informFollowing" },
-            { text: "Baptismal", next: "informFollowing" },
-            { text: "School Records", next: "informFollowing" },
-            { text: "No Records", next: "wcpd" }
-        ]
-    },
-
-    informFollowing: {
-        name: "LEO",
-        text: "Next, Inform the following parties:",
-        bg: "bg_police_station.png",
-        char: ["leo.png"],
-        choices: [
-            { text: "Parents", next: "allInformed" },
-            { text: "Social Worker", next: "allInformed" },
-            { text: "PAO", next: "allInformed" }
-        ]
-    },
-
-    allInformed: {
-        name: "LEO",
-        text: "All parties are informed.",
-        bg: "bg_police_station.png",
-        char: ["leo.png"],
-        choices: [
-            { text: "Proceed to Nearest Public Hospital and Conduct Medico-Legal", next: "wcpd" }
-        ]
-    },
-
-    wcpd: {
-        name: "Social Worker",
-        text: "I will be assisting with the case. We will categorize the child based on age and discernment.",
-        bg: "bg_wcpd.png",
-        char: ["socialworker.png"],
-        choices: [{ text: "Determine Age", next: "ageSelect" }]
-    },
-
-    ageSelect: {
-        name: "Social Worker",
-        text: "Select the child's age category:",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "15 and below", next: "age15below" },
-            { text: "15 to below 18", next: "age15to18" }
-        ]
-    },
-
-    age15below: {
-        name: "Social Worker",
-        text: "The child is 15 or below. Under RA 9344, the child is totally exempt from criminal liability.",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Turn over to the parents/guardian", next: "turnoverParents15below" },
-            { text: "Return", next: "ageSelect" }
-        ]
-    },
-
-    turnoverParents15below: {
-        name: "Parents",
-        text: "The parents will take responsibility for the child.",
-        bg: "bg_house.png",
-        char: ["mother.png", "father.png"],
-        choices: [
-            { text: "Refer to Intervention Program", next: "interventionEnd" },
-            { text: "Back", next: "age15below" }
-        ]
-    },
-
-    interventionEnd: {
-        name: "Narrator",
-        text: "The child is placed in an intervention program and will be reintegrated into the community.",
-        bg: "bg_community.png",
-        char: []
-    },
-
-    age15to18: {
-        name: "Social Worker",
-        text: "The child is 15 above but below 18. Now determine DISCERNMENT:",
-        bg: "bg_wcpd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Without discernment", next: "noDiscernment" },
-            { text: "With discernment", next: "withDiscernment" },
-            { text: "Return", next: "ageSelect" }
-        ]
-    },
-
-    noDiscernment: {
-        name: "Social Worker",
-        text: "The child acted WITHOUT discernment. Legal outcome: Intervention Program.",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Turn over to parents", next: "interventionEnd" },
-            { text: "Back", next: "age15to18" }
-        ]
-    },
-
-    withDiscernment: {
-        name: "Social Worker",
-        text: "The child acted WITH discernment. Determine the nature of the offense:",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Non-serious offense", next: "nonSerious" },
-            { text: "Serious offense", next: "seriousSelectAge" },
-            { text: "Back", next: "age15to18" }
-        ]
-    },
-
-    nonSerious: {
-        name: "Social Worker",
-        text: "Non-serious offense. The child qualifies for DIVERSION unless disqualified.",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Proceed with Diversion", next: "diversionEnd" },
-            { text: "Child is disqualified → Proceed to Court", next: "prosecutionStart" },
-            { text: "Back", next: "withDiscernment" }
-        ]
-    },
-
-    diversionEnd: {
-        name: "Lazo",
-        text: "A diversion conference is conducted and the child complies.",
-        bg: "bg_community.png",
-        char: ["narrator.png"]
-    },
-
-    seriousSelectAge: {
-        name: "Social Worker",
-        text: "Determine the child’s age for serious crime procedures:",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Age 12 to 15, serious crime", next: "serious12to15" },
-            { text: "Age 15 to 18, serious crime", next: "serious15to18" },
-            { text: "Back", next: "withDiscernment" }
-        ]
-    },
-
-    serious12to15: {
-        name: "Social Worker",
-        text: "For ages 12 to 15 with a serious offense: Bahay Pag-asa → IJISC/IIP → If repetition: offenses under SPL/RPC: Bahay Pag-asa → IJISC/IIP.",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Proceed to Bahay Pag-asa", next: "bpaEnd" },
-            { text: "Back", next: "seriousSelectAge" }
-        ]
-    },
-
-    bpaEnd: {
-        name: "Lazo",
-        text: "The child undergoes IJISC/IIP and is later reintegrated to society.",
-        bg: "bg_dswd.png",
-        char: []
-    },
-
-    serious15to18: {
-        name: "Social Worker",
-        text: "For ages 15 to 18 with serious offense and penalty >6 yrs and above: Proceed to Prosecution.",
-        bg: "bg_dswd.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Proceed to Prosecution", next: "prosecutionStart" },
-            { text: "Back", next: "seriousSelectAge" }
-        ]
-    },
-
-    prosecutionStart: {
-        name: "Prosecutor",
-        text: "Preliminary Investigation begins.",
-        bg: "bg_prosecutor.png",
-        char: ["prosecutor.png"],
-        choices: [
-            { text: "Determine Probable Cause", next: "probableCause" },
-            { text: "Back", next: "serious15to18" }
-        ]
-    },
-
-    probableCause: {
-        name: "Prosecutor",
-        text: "Probable Cause is established. Filing Information to the Court.",
-        bg: "bg_prosecutor.png",
-        char: ["prosecutor.png"],
-        choices: [
-            { text: "Proceed to Court", next: "court" },
-            { text: "Back", next: "prosecutionStart" }
-        ]
-    },
-
-    court: {
-        name: "Judge",
-        text: "The Family Court hears the case with child-sensitive procedures.",
-        bg: "bg_court.png",
-        char: ["judge.png"],
-        choices: [
-            { text: "Child is NOT GUILTY", next: "notGuilty" },
-            { text: "Child is GUILTY", next: "guilty" },
-            { text: "Back", next: "probableCause" }
-        ]
-    },
-
-    notGuilty: {
-        name: "Lazo",
-        text: "Case is dismissed. The child returns to his/her family and the society.",
-        bg: "bg_community.png",
-        char: ["cicl.png"]
-    },
-
-    guilty: {
-        name: "Judge",
-        text: "Child is found GUILTY. Sentence is suspended. Commitment to Youth Rehabilitation Center.",
-        bg: "bg_court.png",
-        char: ["judge.png"],
-        choices: [
-            { text: "Assess Degree of Change", next: "degreeCheck" },
-            { text: "Back", next: "court" }
-        ]
-    },
-
-    degreeCheck: {
-        name: "Social Worker",
-        text: "Evaluate if the child demonstrates degree of change (disposition).:",
-        bg: "bg_house.png",
-        char: ["socialworker.png"],
-        choices: [
-            { text: "Degree achieved", next: "fulfilled" },
-            { text: "Not achieved", next: "notFulfilled" },
-            { text: "Back", next: "guilty" }
-        ]
-    },
-
-    fulfilled: {
-        name: "Judge",
-        text: "Degree of change achieved (Fulfilled). Case dismissed. Child is reintegrated to society, there will be no criminal records.",
-        bg: "bg_court.png",
-        char: ["judge.png"]
-    },
-
-    notFulfilled: {
-        name: "Judge",
-        text: "Degree of change not achieved (Not Fulfilled). There will be Criminal Records. Options:",
-        bg: "bg_court.png",
-        char: ["judge.png"],
-        choices: [
-            { text: "Probation", next: "probationEnd" },
-            { text: "Agricultural Penal Farm", next: "continueYRC" },
-            { text: "Back", next: "degreeCheck" }
-        ]
-    },
-
-    probationEnd: {
-        name: "Lazo",
-        text: "Child is placed on probation with monitoring and continuing observation.",
-        bg: "bg_community.png",
-        char: ["cicl.png"]
-    },
-
-    continueYRC: {
-        name: "Lazo",
-        text: "Child is placed in Agricultural Penal Farm where he/she shall reside until his/her sentence is over",
-        bg: "bg_house.png",
-        char: ["cicl.png"],
-        choices: [
-            { text: "End Simulation", next: "simulationEnd" }
-        ]
-    },
-
-    simulationEnd: {
-        name: "Lazo",
-        text: "You have reached the end of the Simulation. Thank you for participating.",
-        bg: "bg_community.png",
-        char: ["narrator.png"]
-    }
+    start: { name: "Lazo", text: "A Child has reportedly committed an offense. You will now simulate the CICL procedures under RA 9344 & 10630.", bg: "bg_community.png", char: ["narrator.png"], choices: [{ text: "Begin Simulation", next: "leoContact" }] },
+    leoContact: { name: "LEO", text: "I approached the child calmly. I must avoid intimidation and introduce myself as Ate/Kuya.", bg: "bg_street_leo.png", char: ["leo.png"], choices: [{ text: "Perform LEO Duties", next: "leoDuties" }] },
+    /* LEO Duties Sequence */
+    leoDuties: { name: "LEO", text: "Determine the child's age using one of the following:", bg: "bg_police_station.png", char: ["leo.png"], choices: [
+        { text: "Birth Certificate", next: "informParties" }, 
+        { text: "Baptismal", next: "informParties" },
+        { text: "School Records", next: "informParties" },
+        { text: "No Records", next: "noRecords" }
+    ]},
+    informParties: { name: "LEO", text: "Inform the following parties:", bg: "bg_police_station.png", char: ["leo.png"], choices: [
+        { text: "Inform Parents, Social Worker, PAO", next: "allInformed" }
+    ]},
+    allInformed: { name: "LEO", text: "All Parties are Informed.", bg: "bg_police_station.png", char: ["leo.png"], choices: [
+        { text: "Proceed to Nearest Public Hospital and Conduct Medico-Legal", next: "wcpd" }
+    ]},
+    noRecords: { name: "LEO", text: "No records found. Use discretion to verify age.", bg: "bg_police_station.png", char: ["leo.png"], choices: [
+        { text: "Proceed to Inform the Following", next: "informParties" }
+    ]},
+    wcpd: { name: "Social Worker", text: "I will be assisting with the case. We will categorize the child based on age and discernment.", bg: "bg_wcpd.png", char: ["socialworker.png"], choices: [{ text: "Determine Age", next: "ageSelect" }]},
+    ageSelect: { name: "Social Worker", text: "Select the child's age category:", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "15 and below", next: "age15below" },
+        { text: "15 to below 18", next: "age15to18" }
+    ]},
+    age15below: { name: "Social Worker", text: "The child is 15 or below. Under RA 9344, the child is totally exempt from criminal liability.", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Turn over to the parents/guardian", next: "turnoverParents15below" },
+        { text: "Return", next: "ageSelect" }
+    ]},
+    turnoverParents15below: { name: "Parents", text: "The parents will take responsibility for the child.", bg: "bg_house.png", char: ["mother.png", "father.png"], choices: [
+        { text: "Refer to Intervention Program", next: "interventionEnd" },
+        { text: "Back", next: "age15below" }
+    ]},
+    interventionEnd: { name: "Narrator", text: "The child is placed in an intervention program and will be reintegrated into the community.", bg: "bg_community.png", char: [] },
+    age15to18: { name: "Social Worker", text: "The child is 15 above but below 18. Now determine DISCERNMENT:", bg: "bg_wcpd.png", char: ["socialworker.png"], choices: [
+        { text: "Without discernment", next: "noDiscernment" },
+        { text: "With discernment", next: "withDiscernment" },
+        { text: "Return", next: "ageSelect" }
+    ]},
+    noDiscernment: { name: "Social Worker", text: "The child acted WITHOUT discernment. Legal outcome: Intervention Program.", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Turn over to parents", next: "interventionEnd" },
+        { text: "Back", next: "age15to18" }
+    ]},
+    withDiscernment: { name: "Social Worker", text: "The child acted WITH discernment. Determine the nature of the offense:", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Non-serious offense", next: "nonSerious" },
+        { text: "Serious offense", next: "seriousSelectAge" },
+        { text: "Back", next: "age15to18" }
+    ]},
+    nonSerious: { name: "Social Worker", text: "Non-serious offense. The child qualifies for DIVERSION unless disqualified.", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Proceed with Diversion", next: "diversionEnd" },
+        { text: "Child is disqualified → Proceed to Court", next: "prosecutionStart" },
+        { text: "Back", next: "withDiscernment" }
+    ]},
+    diversionEnd: { name: "Lazo", text: "A diversion conference is conducted and the child complies.", bg: "bg_community.png", char: ["narrator.png"] },
+    seriousSelectAge: { name: "Social Worker", text: "Determine the child’s age for serious crime procedures:", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Age 12 to 15, serious crime", next: "serious12to15" },
+        { text: "Age 15 to 18, serious crime", next: "serious15to18" },
+        { text: "Back", next: "withDiscernment" }
+    ]},
+    serious12to15: { name: "Social Worker", text: "For ages 12 to 15 with a serious offense: Bahay Pag-asa → IJISC/IIP → If repetition: offenses under SPL/RPC: Bahay Pag-asa → IJISC/IIP.", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Proceed to Bahay Pag-asa", next: "bpaEnd" },
+        { text: "Back", next: "seriousSelectAge" }
+    ]},
+    bpaEnd: { name: "Lazo", text: "The child undergoes IJISC/IIP and is later reintegrated.", bg: "bg_dswd.png", char: [] },
+    serious15to18: { name: "Social Worker", text: "For ages 15 to 18 with serious offense and penalty >6 yrs and above: Proceed to Prosecution.", bg: "bg_dswd.png", char: ["socialworker.png"], choices: [
+        { text: "Proceed to Prosecution", next: "prosecutionStart" },
+        { text: "Back", next: "seriousSelectAge" }
+    ]},
+    prosecutionStart: { name: "Prosecutor", text: "Preliminary Investigation begins.", bg: "bg_prosecutor.png", char: ["prosecutor.png"], choices: [
+        { text: "Determine Probable Cause", next: "probableCause" },
+        { text: "Back", next: "serious15to18" }
+    ]},
+    probableCause: { name: "Prosecutor", text: "Probable Cause is established. Filing Information to the Court.", bg: "bg_prosecutor.png", char: ["prosecutor.png"], choices: [
+        { text: "Proceed to Court", next: "court" },
+        { text: "Back", next: "prosecutionStart" }
+    ]},
+    court: { name: "Judge", text: "The Family Court hears the case with child-sensitive procedures.", bg: "bg_court.png", char: ["judge.png"], choices: [
+        { text: "Child is NOT GUILTY", next: "notGuilty" },
+        { text: "Child is GUILTY", next: "guilty" },
+        { text: "Back", next: "probableCause" }
+    ]},
+    notGuilty: { name: "Lazo", text: "Case dismissed. The child returns to his/her family and the society.", bg: "bg_community.png", char: ["cicl.png"] },
+    guilty: { name: "Judge", text: "Child is found GUILTY. Sentence is suspended. Commitment to Youth Rehabilitation Center.", bg: "bg_court.png", char: ["judge.png"], choices: [
+        { text: "Assess Degree of Change", next: "degreeCheck" },
+        { text: "Back", next: "court" }
+    ]},
+    degreeCheck: { name: "Social Worker", text: "Evaluate if the child demonstrates degree of change (disposition).:", bg: "bg_house.png", char: ["socialworker.png"], choices: [
+        { text: "Degree achieved", next: "fulfilled" },
+        { text: "Not achieved", next: "notFulfilled" },
+        { text: "Back", next: "guilty" }
+    ]},
+    fulfilled: { name: "Judge", text: "Degree of change achieved (Fulfilled). Case dismissed. Child reintegrated, no criminal records.", bg: "bg_court.png", char: ["judge.png"] },
+    notFulfilled: { name: "Judge", text: "Degree of change not achieved (Not Fulfilled). Options:", bg: "bg_court.png", char: ["judge.png"], choices: [
+        { text: "Probation", next: "probationEnd" },
+        { text: "Agricultural Penal Farm", next: "continueYRC" },
+        { text: "Back", next: "degreeCheck" }
+    ]},
+    probationEnd: { name: "Lazo", text: "Child is placed on probation and monitored.", bg: "bg_community.png", char: ["narrator.png"] },
+    continueYRC: { name: "Lazo", text: "Child is placed in Agricultural Penal Farm.", bg: "bg_farm.png", char: ["narrator.png"], choices: [
+        { text: "Finish Simulation", next: "simulationEnd" }
+    ]},
+    simulationEnd: { name: "Lazo", text: "You have reached the end of the Simulation. Thank you for participating.", bg: "bg_community.png", char: ["lazo.png"] }
 };
 
-/* ==========================================================
-   RENDER ENGINE
-========================================================== */
+/* START GAME */
+function startGame() {
+    document.getElementById("title-screen").classList.add("hidden");
+    startComic();
+}
+
+/* COMIC SLIDESHOW */
+let comicIndex = 0;
+function startComic() {
+    const comics = ["comic1","comic2","comic3"];
+    const container = document.getElementById("comic-container");
+    container.style.display = "flex";
+    showComicSlide(comicIndex);
+
+    container.onclick = () => {
+        comicIndex++;
+        if(comicIndex >= comics.length){
+            container.style.display = "none";
+            show("start");
+        } else {
+            showComicSlide(comicIndex);
+        }
+    }
+}
+
+function showComicSlide(idx){
+    document.querySelectorAll(".comic-slide").forEach(el=>el.classList.remove("show"));
+    document.getElementById(`comic${idx+1}`).classList.add("show");
+}
+
+/* MAP PANEL */
+function toggleMap() {
+    let panel = document.getElementById("map-panel");
+    panel.classList.toggle("open");
+}
+
+function gotoScene(scene) {
+    show(scene);
+    toggleMap(); // close after selection
+}
+
+/* Populate Map Buttons */
+const mapPanel = document.getElementById("map-buttons");
+Object.keys(scenes).forEach(sceneKey => {
+    let btn = document.createElement("div");
+    btn.className = "map-btn";
+    btn.innerText = sceneKey.replace(/([A-Z])/g, ' $1').trim();
+    btn.onclick = () => gotoScene(sceneKey);
+    mapPanel.appendChild(btn);
+});
+
+/* SHOW SCENES */
 function show(scene) {
     let s = scenes[scene];
-    if(!s) return;
+    if (!s) return;
     previousScene = scene;
 
     let dialog = document.getElementById("dialogue-box");
-    dialog.classList.remove("visible");
 
-    setTimeout(() => {
+    // Only show map for dialogue (choices) scenes
+    if(s.choices && s.choices.length>0){
+        document.getElementById("map-panel").style.display="block";
+        document.getElementById("map-panel").classList.remove("open");
+    } else {
+        document.getElementById("map-panel").style.display="none";
+    }
+
+    dialog.classList.remove("visible");
+    setTimeout(()=>{
         document.getElementById("name").innerText = s.name;
         document.getElementById("text").innerText = s.text;
 
         let choicesDiv = document.getElementById("choices");
         choicesDiv.innerHTML = "";
-        if (s.choices) {
-            s.choices.forEach(choice => {
-                let btn = document.createElement("div");
-                btn.className = "choice";
+        if(s.choices){
+            s.choices.forEach(choice=>{
+                let btn=document.createElement("div");
+                btn.className="choice";
                 btn.innerText = choice.text;
-                btn.onclick = () => show(choice.next);
+                btn.onclick = ()=>show(choice.next);
                 choicesDiv.appendChild(btn);
             });
         }
 
         let extra = document.getElementById("extra-buttons");
-        extra.innerHTML = "";
-        if (previousScene && previousScene !== scene) {
-            let backBtn = document.createElement("div");
-            backBtn.className = "extra-btn";
-            backBtn.innerText = "Back";
-            backBtn.onclick = () => show(previousScene);
+        extra.innerHTML="";
+        if(previousScene && previousScene!==scene){
+            let backBtn=document.createElement("div");
+            backBtn.className="extra-btn";
+            backBtn.innerText="Back";
+            backBtn.onclick = ()=>show(previousScene);
             extra.appendChild(backBtn);
         }
 
         dialog.classList.add("visible");
-    }, 300);
+    },300);
 
-    document.getElementById("game-container").style.backgroundImage = `url(${s.bg})`;
+    document.getElementById("game-container").style.backgroundImage=`url(${s.bg})`;
 
     let chars = document.getElementById("characters-container");
-    chars.innerHTML = "";
-    if (s.char) {
-        s.char.forEach((src, i) => {
-            let img = document.createElement("img");
-            img.src = src;
-            img.className = "character-img";
-            img.style.left = `${40 + i * 250}px`;
+    chars.innerHTML="";
+    if(s.char){
+        s.char.forEach((src,i)=>{
+            let img=document.createElement("img");
+            img.src=src;
+            img.className="character-img";
+            img.style.left=`${40+i*250}px`;
             chars.appendChild(img);
-            setTimeout(() => img.classList.add("show"), 50 + i * 150);
+            setTimeout(()=>img.classList.add("show"),50+i*150);
         });
     }
 }
-
-/* ==========================================================
-   TITLE SCREEN → START GAME
-========================================================== */
-function startGame() {
-    let title = document.getElementById("title-screen");
-    title.classList.add("hidden");
-
-    setTimeout(() => {
-        showComic();
-    }, 800);
-}
-
-/* ==========================================================
-   COMIC SLIDESHOW
-========================================================== */
-let comicIndex = 0;
-const comics = ["comic1", "comic2", "comic3"];
-function showComic() {
-    let container = document.getElementById("comic-container");
-    container.style.display = "flex";
-    showComicSlide(comicIndex);
-
-    container.onclick = nextComic;
-}
-
-function showComicSlide(index) {
-    comics.forEach((id,i)=>document.getElementById(id).classList.remove("show"));
-    document.getElementById(comics[index]).classList.add("show");
-}
-
-function nextComic() {
-    comicIndex++;
-    if(comicIndex < comics.length){
-        showComicSlide(comicIndex);
-    } else {
-        document.getElementById("comic-container").style.display = "none";
-        show("start");
-    }
-}
-
-/* ==========================================================
-   MAP
-========================================================== */
-function toggleMap() {
-    document.getElementById("map-panel").classList.toggle("open");
-}
-function gotoScene(scene) {
-    toggleMap();
-    show(scene);
-}
 </script>
+
 </body>
 </html>
