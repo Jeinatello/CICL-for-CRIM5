@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>CICL Simulation – RA 9344 & 10630</title>
-
 <style>
     body {
         margin: 0;
@@ -27,9 +26,7 @@
         box-shadow: 0 0 25px #000;
     }
 
-    /* ===============================
-       TITLE SCREEN
-       =============================== */
+    /* TITLE SCREEN */
     #title-screen {
         position: absolute;
         inset: 0;
@@ -52,6 +49,7 @@
     #title-title {
         font-size: 36px;
         font-weight: bold;
+        text-shadow: 0 0 10px #000;
         margin-bottom: 20px;
     }
 
@@ -72,90 +70,20 @@
         box-shadow: 0 0 12px #66c2ff;
         transition: 0.3s;
     }
+
     #start-button:hover {
         background: #a7e0ff;
         transform: translateY(-3px);
         box-shadow: 0 0 20px #a7e0ff;
     }
 
-    /* ===============================
-       COMIC SLIDESHOW
-       =============================== */
-    #comic-container {
+    /* CHARACTERS */
+    #characters-container {
         position: absolute;
         inset: 0;
-        background: #000;
-        z-index: 25;
-        display: none;
-        justify-content: center;
-        align-items: center;
-    }
-    .comic-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transition: opacity 1s ease;
-        position: absolute;
-    }
-    .comic-img.show {
-        opacity: 1;
     }
 
-    /* ===============================
-       MAP BUTTON
-       =============================== */
-    #map-button {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 42px;
-        height: 42px;
-        background: rgba(255,255,255,0.2);
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        backdrop-filter: blur(3px);
-        transition: 0.3s;
-        font-size: 24px;
-        font-weight: bold;
-    }
-    #map-button:hover { background: rgba(255,255,255,0.35); }
-
-    /* ===============================
-       MAP PANEL
-       =============================== */
-    #map-panel {
-        position: absolute;
-        top: 60px;
-        right: 15px;
-        width: 250px;
-        background: rgba(0,0,0,0.85);
-        padding: 15px;
-        border-radius: 8px;
-        display: none;
-        z-index: 11;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    .map-location {
-        padding: 10px;
-        margin: 5px 0;
-        border-radius: 6px;
-        background: rgba(255,255,255,0.15);
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .map-location:hover {
-        background: rgba(255,255,255,0.30);
-    }
-
-    /* ===============================
-       CHARACTERS
-       =============================== */
-    #characters-container img {
+    .character-img {
         position: absolute;
         bottom: 0;
         height: 75%;
@@ -163,14 +91,13 @@
         transition: opacity 0.8s ease, transform 0.8s ease;
         transform: translateY(20px);
     }
-    #characters-container img.show {
+
+    .character-img.show {
         opacity: 1;
         transform: translateY(0px);
     }
 
-    /* ===============================
-       DIALOGUE BOX
-       =============================== */
+    /* DIALOGUE */
     #dialogue-box {
         position: absolute;
         bottom: 0;
@@ -184,6 +111,7 @@
         transform: translateY(20px);
         transition: opacity .6s ease, transform .6s ease;
     }
+
     #dialogue-box.visible {
         opacity: 1;
         transform: translateY(0px);
@@ -194,6 +122,7 @@
         font-weight: bold;
         margin-bottom: 8px;
         color: #66c2ff;
+        text-shadow: 0 0 6px #000;
     }
 
     #text {
@@ -211,12 +140,12 @@
         transition: 0.3s;
         border-left: 4px solid #66c2ff;
     }
+
     .choice:hover {
         background: rgba(255,255,255,0.28);
         transform: translateX(4px);
     }
 
-    #extra-buttons { margin-top: 10px; }
     .extra-btn {
         background: rgba(255,255,255,0.15);
         color: #fff;
@@ -226,16 +155,96 @@
         margin-right: 6px;
         display: inline-block;
         font-size: 14px;
-        border: 1px solid rgba(255,255,255,0.15);
         transition: 0.3s;
+        border: 1px solid rgba(255,255,255,0.15);
     }
+
     .extra-btn:hover {
         background: rgba(255,255,255,0.30);
     }
+
+    /* COMIC SLIDESHOW */
+    #comic-container {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: black;
+        z-index: 50;
+    }
+
+    .comic-slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .comic-slide.show {
+        opacity: 1;
+    }
+
+    /* MAP */
+    #map-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.85);
+        color: black;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 50;
+        border: 2px solid black;
+    }
+
+    #map-panel {
+        position: absolute;
+        top: 0;
+        right: -280px;
+        width: 260px;
+        height: 100%;
+        background: rgba(10,10,10,0.96);
+        color: white;
+        padding: 20px;
+        box-shadow: -3px 0 10px rgba(0,0,0,0.6);
+        z-index: 60;
+        transition: right 0.4s ease;
+    }
+
+    #map-panel.open {
+        right: 0;
+    }
+
+    .map-title {
+        font-size: 22px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .map-item {
+        padding: 10px;
+        margin-bottom: 8px;
+        background: rgba(255,255,255,0.12);
+        border-left: 3px solid #66c2ff;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .map-item:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateX(4px);
+    }
+
 </style>
 </head>
 <body>
-
 <div id="game-container">
 
     <!-- TITLE SCREEN -->
@@ -245,42 +254,50 @@
         <div id="start-button" onclick="startGame()">START</div>
     </div>
 
-    <!-- MAP BUTTON -->
-    <div id="map-button" onclick="toggleMap()">🗺</div>
-
-    <!-- MAP PANEL -->
-    <div id="map-panel"></div>
-
-    <!-- COMIC SLIDES -->
-    <div id="comic-container">
-        <img src="comic1.png" class="comic-img" id="comic1">
-        <img src="comic2.png" class="comic-img" id="comic2">
-        <img src="comic3.png" class="comic-img" id="comic3">
-    </div>
-
-    <!-- CHARACTERS & DIALOGUE -->
+    <!-- CHARACTERS -->
     <div id="characters-container"></div>
+
+    <!-- DIALOGUE BOX -->
     <div id="dialogue-box">
         <div id="name"></div>
         <div id="text"></div>
         <div id="choices"></div>
         <div id="extra-buttons"></div>
     </div>
+
+    <!-- COMIC SLIDESHOW -->
+    <div id="comic-container">
+        <img id="comic1" class="comic-slide" src="comic1.png">
+        <img id="comic2" class="comic-slide" src="comic2.png">
+        <img id="comic3" class="comic-slide" src="comic3.png">
+    </div>
+
+    <!-- MAP -->
+    <div id="map-button" onclick="toggleMap()">🗺️ Map</div>
+    <div id="map-panel">
+        <div class="map-title">SCENERY MAP</div>
+        <div class="map-item" onclick="gotoScene('start')">Community</div>
+        <div class="map-item" onclick="gotoScene('leoContact')">Street / Initial Contact</div>
+        <div class="map-item" onclick="gotoScene('leoDuties')">Police Station / LEO Duties</div>
+        <div class="map-item" onclick="gotoScene('wcpd')">WCPD</div>
+        <div class="map-item" onclick="gotoScene('ageSelect')">Age Determination</div>
+        <div class="map-item" onclick="gotoScene('withDiscernment')">Discernment Check</div>
+        <div class="map-item" onclick="gotoScene('nonSerious')">Diversion Evaluation</div>
+        <div class="map-item" onclick="gotoScene('seriousSelectAge')">Serious Crime Path</div>
+        <div class="map-item" onclick="gotoScene('prosecutionStart')">Prosecutor’s Office</div>
+        <div class="map-item" onclick="gotoScene('court')">Family Court</div>
+        <div class="map-item" onclick="gotoScene('continueYRC')">Youth Rehab / Penal Farm</div>
+        <div class="map-item" onclick="gotoScene('simulationEnd')">Simulation End</div>
+    </div>
 </div>
 
 <script>
-  
-/* ==========================================================
-   SCENES — COMPLETE & INTEGRATED
-   ========================================================== */
-
 let previousScene = null;
 
+/* ==========================================================
+   SCENES
+========================================================== */
 let scenes = {
-
-    /* ============================
-       INTRO SCENE AFTER COMICS
-       ============================ */
     start: {
         name: "Lazo",
         text: "A Child has reportedly committed an offense. You will now simulate the CICL procedures under RA 9344 & 10630.",
@@ -291,13 +308,9 @@ let scenes = {
         ]
     },
 
-    /* =======================================================
-       LEO CONTACT + NEW EXPANDED SEQUENCE
-       ======================================================= */
-
     leoContact: {
         name: "LEO",
-        text: "I approached the child calmly. I must avoid intimidation and introduce myself properly as Ate/Kuya.",
+        text: "I approached the child calmly. I must avoid intimidation and introduce myself as Ate/Kuya.",
         bg: "bg_street_leo.png",
         char: ["leo.png"],
         choices: [{ text: "Perform LEO Duties", next: "leoDuties" }]
@@ -305,72 +318,46 @@ let scenes = {
 
     leoDuties: {
         name: "LEO",
-        text: "As a Law Enforcement Officer (LEO), I must follow procedures. First step: AGE DETERMINATION.",
-        bg: "bg_police_station.png",
-        char: ["leo.png"],
-        choices: [{ text: "Determine Age", next: "determineAgeDocs" }]
-    },
-
-    determineAgeDocs: {
-        name: "LEO",
-        text: "Select the available document for determining the child's age:",
+        text: "As a Law Enforcement Officer (LEO), I have duties to be complied. Select a method for Age Determination:",
         bg: "bg_police_station.png",
         char: ["leo.png"],
         choices: [
             { text: "Birth Certificate", next: "informFollowing" },
-            { text: "Baptismal Certificate", next: "informFollowing" },
+            { text: "Baptismal", next: "informFollowing" },
             { text: "School Records", next: "informFollowing" },
-            { text: "No Records Available", next: "informFollowing" }
+            { text: "No Records", next: "wcpd" }
         ]
     },
 
     informFollowing: {
         name: "LEO",
-        text: "After establishing the age, I must INFORM the following parties:",
+        text: "Inform the following parties:",
         bg: "bg_police_station.png",
         char: ["leo.png"],
         choices: [
-            { text: "Inform the Parents, Social Worker, and PAO", next: "informComplete" }
+            { text: "Parents", next: "allInformed" },
+            { text: "Social Worker", next: "allInformed" },
+            { text: "PAO", next: "allInformed" }
         ]
     },
 
-    informComplete: {
+    allInformed: {
         name: "LEO",
-        text: "All parties have now been notified properly.",
+        text: "All parties are informed.",
         bg: "bg_police_station.png",
         char: ["leo.png"],
         choices: [
-            { text: "Proceed to Medico-Legal Examination", next: "medicoLegal" }
+            { text: "Proceed to Nearest Public Hospital and Conduct Medico-Legal", next: "wcpd" }
         ]
     },
-
-    medicoLegal: {
-        name: "LEO",
-        text: "The child is brought to the nearest public hospital for medico-legal examination.",
-        bg: "bg_police_station.png",
-        char: ["leo.png"],
-        choices: [
-            { text: "Proceed to WCPD", next: "wcpd" }
-        ]
-    },
-
-    /* =======================================================
-       ORIGINAL FLOW RESUMES — WCPD → AGE CHECK
-       ======================================================= */
 
     wcpd: {
         name: "Social Worker",
-        text: "I will now assist. We begin by categorizing the child based on age and discernment.",
+        text: "I will be assisting with the case. We will categorize the child based on age and discernment.",
         bg: "bg_wcpd.png",
         char: ["socialworker.png"],
-        choices: [
-            { text: "Determine Age Category", next: "ageSelect" }
-        ]
+        choices: [{ text: "Determine Age", next: "ageSelect" }]
     },
-
-    /* ============================
-       AGE SELECTION
-       ============================ */
 
     ageSelect: {
         name: "Social Worker",
@@ -383,85 +370,79 @@ let scenes = {
         ]
     },
 
-    /* ============================
-       AGE 15 BELOW
-       ============================ */
-
     age15below: {
         name: "Social Worker",
         text: "The child is 15 or below. Under RA 9344, the child is totally exempt from criminal liability.",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
-            { text: "Turn over to parents", next: "turnoverParents15below" }
+            { text: "Turn over to the parents/guardian", next: "turnoverParents15below" },
+            { text: "Return", next: "ageSelect" }
         ]
     },
 
     turnoverParents15below: {
         name: "Parents",
-        text: "We will take responsibility for our child.",
+        text: "The parents will take responsibility for the child.",
         bg: "bg_house.png",
         char: ["mother.png", "father.png"],
         choices: [
-            { text: "Refer to Intervention Program", next: "interventionEnd" }
+            { text: "Refer to Intervention Program", next: "interventionEnd" },
+            { text: "Back", next: "age15below" }
         ]
     },
 
     interventionEnd: {
         name: "Narrator",
-        text: "The child is placed in an intervention program and reintegrated into the community.",
+        text: "The child is placed in an intervention program and will be reintegrated into the community.",
         bg: "bg_community.png",
         char: []
     },
 
-    /* ============================
-       AGE 15–18
-       ============================ */
-
     age15to18: {
         name: "Social Worker",
-        text: "The child is 15 to below 18. Next: determine DISCERNMENT.",
+        text: "The child is 15 above but below 18. Now determine DISCERNMENT:",
         bg: "bg_wcpd.png",
         char: ["socialworker.png"],
         choices: [
-            { text: "Without Discernment", next: "noDiscernment" },
-            { text: "With Discernment", next: "withDiscernment" }
+            { text: "Without discernment", next: "noDiscernment" },
+            { text: "With discernment", next: "withDiscernment" },
+            { text: "Return", next: "ageSelect" }
         ]
     },
 
     noDiscernment: {
         name: "Social Worker",
-        text: "The child acted WITHOUT discernment. Applicable outcome: INTERVENTION PROGRAM.",
+        text: "The child acted WITHOUT discernment. Legal outcome: Intervention Program.",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
-            { text: "Turn over to parents", next: "interventionEnd" }
+            { text: "Turn over to parents", next: "interventionEnd" },
+            { text: "Back", next: "age15to18" }
         ]
     },
 
     withDiscernment: {
         name: "Social Worker",
-        text: "The child acted WITH discernment. Classify the offense:",
+        text: "The child acted WITH discernment. Determine the nature of the offense:",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
             { text: "Non-serious offense", next: "nonSerious" },
-            { text: "Serious offense", next: "seriousSelectAge" }
+            { text: "Serious offense", next: "seriousSelectAge" },
+            { text: "Back", next: "age15to18" }
         ]
     },
 
-    /* ============================
-       NON-SERIOUS
-       ============================ */
-
     nonSerious: {
         name: "Social Worker",
-        text: "The child qualifies for DIVERSION unless disqualified.",
+        text: "Non-serious offense. The child qualifies for DIVERSION unless disqualified.",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
             { text: "Proceed with Diversion", next: "diversionEnd" },
-            { text: "Child is disqualified → Proceed to Court", next: "prosecutionStart" }
+            { text: "Child is disqualified → Proceed to Court", next: "prosecutionStart" },
+            { text: "Back", next: "withDiscernment" }
         ]
     },
 
@@ -472,28 +453,26 @@ let scenes = {
         char: ["narrator.png"]
     },
 
-    /* ============================
-       SERIOUS OFFENSE
-       ============================ */
-
     seriousSelectAge: {
         name: "Social Worker",
-        text: "Select the child's age range for serious crime procedures:",
+        text: "Determine the child’s age for serious crime procedures:",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
-            { text: "Age 12 to 15 (Serious Crime)", next: "serious12to15" },
-            { text: "Age 15 to 18 (Serious Crime)", next: "serious15to18" }
+            { text: "Age 12 to 15, serious crime", next: "serious12to15" },
+            { text: "Age 15 to 18, serious crime", next: "serious15to18" },
+            { text: "Back", next: "withDiscernment" }
         ]
     },
 
     serious12to15: {
         name: "Social Worker",
-        text: "Child (12–15) with serious crime: Bahay Pag-asa → IJISC/IIP.",
+        text: "For ages 12 to 15 with a serious offense: Bahay Pag-asa → IJISC/IIP → If repetition: offenses under SPL/RPC: Bahay Pag-asa → IJISC/IIP.",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
-            { text: "Proceed to Bahay Pag-asa", next: "bpaEnd" }
+            { text: "Proceed to Bahay Pag-asa", next: "bpaEnd" },
+            { text: "Back", next: "seriousSelectAge" }
         ]
     },
 
@@ -506,17 +485,14 @@ let scenes = {
 
     serious15to18: {
         name: "Social Worker",
-        text: "Child (15–18) with serious crime (penalty >6 years): Proceed to Prosecution.",
+        text: "For ages 15 to 18 with serious offense and penalty >6 yrs and above: Proceed to Prosecution.",
         bg: "bg_dswd.png",
         char: ["socialworker.png"],
         choices: [
-            { text: "Proceed to Prosecution", next: "prosecutionStart" }
+            { text: "Proceed to Prosecution", next: "prosecutionStart" },
+            { text: "Back", next: "seriousSelectAge" }
         ]
     },
-
-    /* ============================
-       PROSECUTION
-       ============================ */
 
     prosecutionStart: {
         name: "Prosecutor",
@@ -524,38 +500,37 @@ let scenes = {
         bg: "bg_prosecutor.png",
         char: ["prosecutor.png"],
         choices: [
-            { text: "Determine Probable Cause", next: "probableCause" }
+            { text: "Determine Probable Cause", next: "probableCause" },
+            { text: "Back", next: "serious15to18" }
         ]
     },
 
     probableCause: {
         name: "Prosecutor",
-        text: "Probable cause is established. Filing Information to the Court.",
+        text: "Probable Cause is established. Filing Information to the Court.",
         bg: "bg_prosecutor.png",
         char: ["prosecutor.png"],
         choices: [
-            { text: "Proceed to Court", next: "court" }
+            { text: "Proceed to Court", next: "court" },
+            { text: "Back", next: "prosecutionStart" }
         ]
     },
 
-    /* ============================
-       COURT
-       ============================ */
-
     court: {
         name: "Judge",
-        text: "The Family Court hears the case using child-sensitive procedures.",
+        text: "The Family Court hears the case with child-sensitive procedures.",
         bg: "bg_court.png",
         char: ["judge.png"],
         choices: [
             { text: "Child is NOT GUILTY", next: "notGuilty" },
-            { text: "Child is GUILTY", next: "guilty" }
+            { text: "Child is GUILTY", next: "guilty" },
+            { text: "Back", next: "probableCause" }
         ]
     },
 
     notGuilty: {
         name: "Lazo",
-        text: "Case dismissed. The child returns to their family and community.",
+        text: "Case dismissed. The child returns to his/her family and the society.",
         bg: "bg_community.png",
         char: ["cicl.png"]
     },
@@ -566,36 +541,39 @@ let scenes = {
         bg: "bg_court.png",
         char: ["judge.png"],
         choices: [
-            { text: "Assess Degree of Change", next: "degreeCheck" }
+            { text: "Assess Degree of Change", next: "degreeCheck" },
+            { text: "Back", next: "court" }
         ]
     },
 
     degreeCheck: {
         name: "Social Worker",
-        text: "Evaluate if the child demonstrates degree of change:",
+        text: "Evaluate if the child demonstrates degree of change (disposition).:",
         bg: "bg_house.png",
         char: ["socialworker.png"],
         choices: [
             { text: "Degree achieved", next: "fulfilled" },
-            { text: "Not achieved", next: "notFulfilled" }
+            { text: "Not achieved", next: "notFulfilled" },
+            { text: "Back", next: "guilty" }
         ]
     },
 
     fulfilled: {
         name: "Judge",
-        text: "Degree of change achieved. Case dismissed. No criminal record.",
+        text: "Degree of change achieved (Fulfilled). Case dismissed. Child reintegrated, no criminal records.",
         bg: "bg_court.png",
         char: ["judge.png"]
     },
 
     notFulfilled: {
         name: "Judge",
-        text: "Degree of change NOT achieved. Choose option:",
+        text: "Degree of change not achieved (Not Fulfilled). Options:",
         bg: "bg_court.png",
         char: ["judge.png"],
         choices: [
             { text: "Probation", next: "probationEnd" },
-            { text: "Agricultural Penal Farm", next: "agriFarm" }
+            { text: "Agricultural Penal Farm", next: "continueYRC" },
+            { text: "Back", next: "degreeCheck" }
         ]
     },
 
@@ -606,40 +584,31 @@ let scenes = {
         char: ["cicl.png"]
     },
 
-    /* ============================
-       AGRI FARM → FINAL ENDING
-       ============================ */
-
-    agriFarm: {
+    continueYRC: {
         name: "Lazo",
-        text: "Child is placed in Agricultural Penal Farm where he/she shall reside until the sentence is served.",
-        bg: "bg_agri_farm.png",
-        char: ["narrator.png"],
+        text: "Child is placed in Agricultural Penal Farm where he/she shall reside until his/her sentence is over",
+        bg: "bg_house.png",
+        char: ["cicl.png"],
         choices: [
-            { text: "Finish Simulation", next: "finalEnding" }
+            { text: "End Simulation", next: "simulationEnd" }
         ]
     },
 
-    finalEnding: {
+    simulationEnd: {
         name: "Lazo",
         text: "You have reached the end of the Simulation. Thank you for participating.",
         bg: "bg_community.png",
-        char: ["narrator.png"],
-        choices: [
-            { text: "Return to Title Screen", next: "start" }
-        ]
+        char: ["narrator.png"]
     }
 };
 
-
 /* ==========================================================
    RENDER ENGINE
-   ========================================================== */
-
+========================================================== */
 function show(scene) {
     let s = scenes[scene];
-
-    previousScene = previousScene === scene ? null : previousScene;
+    if(!s) return;
+    previousScene = scene;
 
     let dialog = document.getElementById("dialogue-box");
     dialog.classList.remove("visible");
@@ -653,12 +622,9 @@ function show(scene) {
         if (s.choices) {
             s.choices.forEach(choice => {
                 let btn = document.createElement("div");
-                btn.classList.add("choice");
+                btn.className = "choice";
                 btn.innerText = choice.text;
-                btn.onclick = () => {
-                    previousScene = scene;
-                    show(choice.next);
-                };
+                btn.onclick = () => show(choice.next);
                 choicesDiv.appendChild(btn);
             });
         }
@@ -684,6 +650,7 @@ function show(scene) {
         s.char.forEach((src, i) => {
             let img = document.createElement("img");
             img.src = src;
+            img.className = "character-img";
             img.style.left = `${40 + i * 250}px`;
             chars.appendChild(img);
             setTimeout(() => img.classList.add("show"), 50 + i * 150);
@@ -692,76 +659,55 @@ function show(scene) {
 }
 
 /* ==========================================================
-   COMIC SLIDESHOW
-   ========================================================== */
-
+   TITLE SCREEN → START GAME
+========================================================== */
 function startGame() {
-    document.getElementById("title-screen").classList.add("hidden");
-    setTimeout(showComics, 900);
-}
+    let title = document.getElementById("title-screen");
+    title.classList.add("hidden");
 
-function showComics() {
-    const cc = document.getElementById("comic-container");
-    cc.style.display = "flex";
-
-    const slides = [
-        document.getElementById("comic1"),
-        document.getElementById("comic2"),
-        document.getElementById("comic3")
-    ];
-
-    let idx = 0;
-
-    function nextSlide() {
-        if (idx > 0) slides[idx - 1].classList.remove("show");
-        if (idx < slides.length) {
-            slides[idx].classList.add("show");
-            idx++;
-            setTimeout(nextSlide, 2500);
-        } else {
-            cc.style.display = "none";
-            show("start");
-        }
-    }
-
-    nextSlide();
+    setTimeout(() => {
+        showComic();
+    }, 800);
 }
 
 /* ==========================================================
-   MAP SYSTEM
-   ========================================================== */
+   COMIC SLIDESHOW
+========================================================== */
+let comicIndex = 0;
+const comics = ["comic1", "comic2", "comic3"];
+function showComic() {
+    let container = document.getElementById("comic-container");
+    container.style.display = "flex";
+    showComicSlide(comicIndex);
 
-function toggleMap() {
-    let panel = document.getElementById("map-panel");
-    panel.style.display = panel.style.display === "block" ? "none" : "block";
+    container.onclick = nextComic;
 }
 
-let mapLocations = [
-    { label: "Community", bg: "bg_community.png" },
-    { label: "Street", bg: "bg_street_leo.png" },
-    { label: "Police Station", bg: "bg_police_station.png" },
-    { label: "WCPD", bg: "bg_wcpd.png" },
-    { label: "DSWD", bg: "bg_dswd.png" },
-    { label: "House", bg: "bg_house.png" },
-    { label: "Prosecutor", bg: "bg_prosecutor.png" },
-    { label: "Court", bg: "bg_court.png" },
-    { label: "Bahay Pag-asa", bg: "bg_dswd.png" },
-    { label: "Youth Rehab Center", bg: "bg_house.png" },
-    { label: "Agri Penal Farm", bg: "bg_agri_farm.png" }
-];
+function showComicSlide(index) {
+    comics.forEach((id,i)=>document.getElementById(id).classList.remove("show"));
+    document.getElementById(comics[index]).classList.add("show");
+}
 
-let mapPanel = document.getElementById("map-panel");
-mapLocations.forEach(loc => {
-    let item = document.createElement("div");
-    item.classList.add("map-location");
-    item.innerText = loc.label;
-    item.onclick = () => {
-        document.getElementById("game-container").style.backgroundImage = `url(${loc.bg})`;
-        toggleMap();
-    };
-    mapPanel.appendChild(item);
-});
+function nextComic() {
+    comicIndex++;
+    if(comicIndex < comics.length){
+        showComicSlide(comicIndex);
+    } else {
+        document.getElementById("comic-container").style.display = "none";
+        show("start");
+    }
+}
 
+/* ==========================================================
+   MAP
+========================================================== */
+function toggleMap() {
+    document.getElementById("map-panel").classList.toggle("open");
+}
+function gotoScene(scene) {
+    toggleMap();
+    show(scene);
+}
 </script>
 </body>
 </html>
