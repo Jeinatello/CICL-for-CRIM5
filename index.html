@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>CICL Simulation – RA 9344 & 10630</title>
@@ -12,7 +12,6 @@ body {
     overflow: hidden;
 }
 
-/* --- Game Container --- */
 #game-container {
     width: 900px;
     height: 600px;
@@ -27,7 +26,6 @@ body {
     box-shadow: 0 0 25px #000;
 }
 
-/* --- TITLE SCREEN --- */
 #title-screen {
     position: absolute;
     inset: 0;
@@ -78,7 +76,6 @@ body {
     box-shadow: 0 0 20px #a7e0ff;
 }
 
-/* --- Characters --- */
 .character-img {
     position: absolute;
     bottom: 0;
@@ -93,7 +90,6 @@ body {
     transform: translateY(0px);
 }
 
-/* --- Dialogue Box --- */
 #dialogue-box {
     position: absolute;
     bottom: 0;
@@ -161,7 +157,6 @@ body {
     background: rgba(255,255,255,0.30);
 }
 
-/* --- COMIC SLIDESHOW --- */
 #comic-slideshow {
     position: absolute;
     inset: 0;
@@ -187,27 +182,33 @@ body {
     margin-bottom: 20px;
     transition: opacity 0.6s ease;
 }
+#comic-next {
+    cursor: pointer;
+    background: #66c2ff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #000;
+}
+#comic-next:hover { background: #a7e0ff; }
 </style>
 </head>
 <body>
 
 <div id="game-container">
 
-    <!-- ============================== TITLE SCREEN ================================ -->
     <div id="title-screen">
         <div id="title-title">Process of Handling a CICL</div>
         <div id="title-sub">A Guided Simulation of RA 9344 & 10630 Procedures</div>
-        <div id="start-button" onclick="startGame()">START</div>
+        <div id="start-button">START</div>
     </div>
 
-    <!-- COMIC SLIDESHOW -->
     <div id="comic-slideshow">
         <img id="comic-image" src="">
         <div id="comic-caption"></div>
         <div id="comic-next">NEXT</div>
     </div>
 
-    <!-- Game Area -->
     <div id="characters-container"></div>
     <div id="dialogue-box">
         <div id="name"></div>
@@ -218,14 +219,14 @@ body {
 </div>
 
 <script>
-/* ======================= COMIC SLIDES ======================= */
+// ======================= COMIC SLIDES =======================
 const comicSlides = [
     { img: "comic1.png", caption: "A child has been reported for an incident in the community." },
     { img: "comic2.png", caption: "The local authorities and social workers are preparing to intervene." },
     { img: "comic3.png", caption: "This simulation will guide you through the proper steps." }
 ];
 
-/* ======================= SCENES ======================= */
+// ======================= SCENES =======================
 let previousScene = null;
 
 let scenes = {
@@ -518,43 +519,46 @@ let scenes = {
         text: "Child will reside in an Agricultural Penal Farm where he/she will serve his/her sentence.",
         bg: "bg_penal.png",
         char: ["cicl.png"]
+        choices: [
+            { text: "End Simulation", next: "endSimulation" }
+    }
+
+    endSimulation: {
+        name: "Narrator",
+        text: "Simulation completed. Thank you for participating!",
+        bg: "bg_community.png",
+        char: ["narrator.png"]
     }
 };
 
-/* ======================= RENDER ENGINE ======================= */
-function show(scene) {
-    let s = scenes[scene];
+// ======================= RENDER SCENE =======================
+function show(sceneName) {
+    const scene = scenes[sceneName];
+    if (!scene) return;
 
-    if (!s) return;
-
-    let dialog = document.getElementById("dialogue-box");
+    const dialog = document.getElementById("dialogue-box");
     dialog.classList.remove("visible");
 
     setTimeout(() => {
-        document.getElementById("name").innerText = s.name || "";
-        document.getElementById("text").innerText = s.text || "";
+        document.getElementById("name").innerText = scene.name || "";
+        document.getElementById("text").innerText = scene.text || "";
 
-        // Choices
-        let choicesDiv = document.getElementById("choices");
+        const choicesDiv = document.getElementById("choices");
         choicesDiv.innerHTML = "";
-        if (s.choices) {
-            s.choices.forEach(choice => {
-                let btn = document.createElement("div");
+        if (scene.choices) {
+            scene.choices.forEach(choice => {
+                const btn = document.createElement("div");
                 btn.className = "choice";
                 btn.innerText = choice.text;
-                btn.onclick = () => {
-                    previousScene = scene;
-                    show(choice.next);
-                };
+                btn.onclick = () => { previousScene = sceneName; show(choice.next); };
                 choicesDiv.appendChild(btn);
             });
         }
 
-        // Extra buttons (Back)
-        let extra = document.getElementById("extra-buttons");
+        const extra = document.getElementById("extra-buttons");
         extra.innerHTML = "";
-        if (previousScene && previousScene !== scene) {
-            let backBtn = document.createElement("div");
+        if (previousScene && previousScene !== sceneName) {
+            const backBtn = document.createElement("div");
             backBtn.className = "extra-btn";
             backBtn.innerText = "Back";
             backBtn.onclick = () => show(previousScene);
@@ -564,67 +568,13 @@ function show(scene) {
         dialog.classList.add("visible");
     }, 300);
 
-    // Background image
-    document.getElementById("game-container").style.backgroundImage = `url(${s.bg})`;
+    document.getElementById("game-container").style.backgroundImage = `url(${scene.bg})`;
 
-    // Characters
-    let chars = document.getElementById("characters-container");
+    const chars = document.getElementById("characters-container");
     chars.innerHTML = "";
-    if (s.char) {
-        s.char.forEach((src, i) => {
-            let img = document.createElement("img");
-            img.src = src;
-            img.className = "character-img";
-            img.style.left = `${40 + i * 250}px`;
-            chars.appendChild(img);
-            setTimeout(() => img.classList.add("show"), 50 + i * 150);
-        });
-    }
-    
-/* ======================= TITLE SCREEN → START → COMIC ======================= */
-function show(scene) {
-    let s = scenes[scene];
-    if (!s) return;
-
-    let dialog = document.getElementById("dialogue-box");
-    dialog.classList.remove("visible");
-
-    setTimeout(() => {
-        document.getElementById("name").innerText = s.name || "";
-        document.getElementById("text").innerText = s.text || "";
-
-        let choicesDiv = document.getElementById("choices");
-        choicesDiv.innerHTML = "";
-        if (s.choices) {
-            s.choices.forEach(choice => {
-                let btn = document.createElement("div");
-                btn.className = "choice";
-                btn.innerText = choice.text;
-                btn.onclick = () => { previousScene = scene; show(choice.next); };
-                choicesDiv.appendChild(btn);
-            });
-        }
-
-        let extra = document.getElementById("extra-buttons");
-        extra.innerHTML = "";
-        if (previousScene && previousScene !== scene) {
-            let backBtn = document.createElement("div");
-            backBtn.className = "extra-btn";
-            backBtn.innerText = "Back";
-            backBtn.onclick = () => show(previousScene);
-            extra.appendChild(backBtn);
-        }
-
-        dialog.classList.add("visible");
-    }, 300);
-
-    document.getElementById("game-container").style.backgroundImage = `url(${s.bg})`;
-
-    let chars = document.getElementById("characters-container");
-    chars.innerHTML = "";
-    if (s.char) {
-        s.char.forEach((src, i) => {
-            let img = document.createElement("img");
+    if (scene.char) {
+        scene.char.forEach((src, i) => {
+            const img = document.createElement("img");
             img.src = src;
             img.className = "character-img";
             img.style.left = `${40 + i * 250}px`;
@@ -634,15 +584,16 @@ function show(scene) {
     }
 }
 
-// ======================= START GAME & COMIC =======================
+// ======================= START GAME =======================
 function startGame() {
-    let title = document.getElementById("title-screen");
+    const title = document.getElementById("title-screen");
     title.classList.add("hidden");
 
-    let comic = document.getElementById("comic-slideshow");
-    let comicImage = document.getElementById("comic-image");
-    let comicCaption = document.getElementById("comic-caption");
-    let nextBtn = document.getElementById("comic-next");
+    const comic = document.getElementById("comic-slideshow");
+    const comicImage = document.getElementById("comic-image");
+    const comicCaption = document.getElementById("comic-caption");
+    const nextBtn = document.getElementById("comic-next");
+
     let currentSlide = 0;
     let isTransitioning = false;
 
@@ -664,7 +615,7 @@ function startGame() {
             comicCaption.style.opacity = 1;
 
             setTimeout(() => { isTransitioning = false; }, 600);
-        }, 400);
+        }, 300);
     }
 
     showSlide(currentSlide);
@@ -677,11 +628,14 @@ function startGame() {
         } else {
             comic.style.opacity = "0";
             comic.style.pointerEvents = "none";
-            setTimeout(() => { show("start"); }, 500);
+            setTimeout(() => show("start"), 500);
         }
     };
 }
-</script>
 
+// Attach START button
+document.getElementById("start-button").onclick = startGame;
+
+</script>
 </body>
 </html>
