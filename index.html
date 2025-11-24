@@ -145,7 +145,7 @@ let scenes = {
         {text:"Proceed to Court", next:"court"},
         {text:"Back", next:"prosecutionStart"}
     ]},
-    court: { name:"Judge", text:"The Family Court hears the case with child-sensitive procedures.", bg:"bg_court.png", char:["judge.png"], choices:[
+    court: { name:"Judge", text:"The Family Court hears the case with child-sensitive procedures, while the procedure is ongoing the child can be temporarily released under Bail of Recognizance or be placed in YDH (Bahay Pagasa).", bg:"bg_court.png", char:["judge.png"], choices:[
         {text:"Child is NOT GUILTY", next:"notGuilty"},
         {text:"Child is GUILTY", next:"guilty"},
         {text:"Back", next:"probableCause"}
