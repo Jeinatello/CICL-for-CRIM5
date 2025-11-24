@@ -25,8 +25,27 @@
     .extra-btn:hover { background: rgba(255,255,255,0.30); }
 
     /* Comic Slideshow */
-    #comic-container { position:absolute; inset:0; display:none; justify-content:center; align-items:center; background:#000; z-index:30; }
-    .comic-slide { position:absolute; width:100%; height:100%; background-size:cover; background-position:center; opacity:0; transition:opacity 0.5s; }
+    #comic-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 150px); /* leave space for dialogue box */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    z-index: 30;
+}
+
+    .comic-slide {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
     .comic-slide.show { opacity:1; }
 
     /* Diagram Map */
@@ -306,13 +325,16 @@ function show(scene){
         const container = document.getElementById("characters-container");
         container.innerHTML="";
         if(s.char){
-            s.char.forEach((imgName,i)=>{
-                let img = document.createElement("img");
-                img.src = imgName;
-                img.className="character-img show";
-                img.style.left = `${i*120}px`;
-                container.appendChild(img);
-            });
+            s.char.forEach((imgName, i) => {
+    let img = document.createElement("img");
+    img.src = imgName;
+    img.className = "character-img show";
+    img.style.height = "50%"; // smaller size
+    img.style.bottom = "150px"; // above dialogue box
+    img.style.left = `${i*120}px`;
+    container.appendChild(img);
+});
+
         }
 
         // Background
