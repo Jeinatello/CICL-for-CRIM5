@@ -71,9 +71,9 @@ let previousScene = null;
 
 /* SCENES */
 let scenes = {
-    startScene: { name:"Lazo", text:"A Child has reportedly committed an offense. You will now simulate the CICL procedures under RA 9344 & 10630.", bg:"bg_community.png", char:["narrator.png"], choices:[{text:"Begin Simulation", next:"leoContact"}]},
+    startScene: { name:"Lazo", text:"A Child has reportedly committed an offense. You will now simulate the CICL (Child accused,alleged,adjudged of) procedures under RA 9344 & 10630.", bg:"bg_community.png", char:["narrator.png"], choices:[{text:"Begin Simulation", next:"leoContact"}]},
     leoContact: { name:"LEO", text:"I approached the child calmly. I must avoid intimidation and introduce myself as Ate/Kuya.", bg:"bg_street_leo.png", char:["leo.png"], choices:[{text:"Perform LEO Duties", next:"leoDuties"}]},
-    leoDuties: { name:"LEO", text:"Determine the child's age using one of the following:", bg:"bg_police_station.png", char:["leo.png"], choices:[
+    leoDuties: { name:"LEO", text:"Determine the child's age using one of the following documents:", bg:"bg_police_station.png", char:["leo.png"], choices:[
         {text:"Birth Certificate", next:"informParties"}, 
         {text:"Baptismal", next:"informParties"},
         {text:"School Records", next:"informParties"},
@@ -84,7 +84,7 @@ let scenes = {
         {text:"Inform Parents, Social Worker, PAO", next:"allInformed"}
     ]},
     allInformed: { name:"LEO", text:"All Parties are Informed.", bg:"bg_police_station.png", char:["leo.png"], choices:[
-        {text:"Proceed to Nearest Public Hospital and Conduct Physical or Mental Examination", next:"wcpd"}
+        {text:"Proceed to Nearest Public Hospital and Conduct Physical, Medical, or Mental Examination", next:"wcpd"}
     ]},
     noRecords: { name:"LEO", text:"No records found. Use discretion to verify age.", bg:"bg_police_station.png", char:["leo.png"], choices:[
         {text:"Proceed to Inform the Following", next:"informParties"}
