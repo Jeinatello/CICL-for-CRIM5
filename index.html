@@ -154,6 +154,7 @@
         border: 1px solid rgba(255,255,255,0.15);
     }
     .map-btn:hover { background: rgba(255,255,255,0.30); }
+    .map-btn.current { border: 2px solid #ffcc00; }
 
     /* Comic Slideshow */
     #comic-container {
@@ -175,19 +176,35 @@
         transition: opacity 0.5s ease;
     }
     .comic-slide.show { opacity: 1; }
+
+    /* Scene Diagram */
+    #scene-diagram {
+        display:none;
+        position:absolute;
+        inset:0;
+        background:rgba(0,0,0,0.85);
+        z-index:50;
+        overflow:auto;
+        cursor:pointer;
+    }
+    #diagram-svg { width:2000px; height:1200px; }
+    .scene-node { fill:#66c2ff; cursor:pointer; stroke:#fff; stroke-width:1.5; }
+    .scene-label { fill:#fff; font-size:12px; pointer-events:none; font-weight:bold; }
 </style>
 </head>
 <body>
-
 <div id="game-container">
+    <!-- Title -->
     <div id="title-screen">
         <div id="title-title">Process of Handling a CICL</div>
         <div id="title-sub">A Guided Simulation of RA 9344 & 10630 Procedures</div>
         <div id="start-button" onclick="startGame()">START</div>
     </div>
 
+    <!-- Characters -->
     <div id="characters-container"></div>
 
+    <!-- Dialogue Box -->
     <div id="dialogue-box">
         <div id="name"></div>
         <div id="text"></div>
@@ -202,10 +219,15 @@
         <div id="comic3" class="comic-slide" style="background-image:url('comic3.png')"></div>
     </div>
 
-    <!-- Collapsible Map Panel -->
+    <!-- Map Panel -->
     <div id="map-panel">
         <div id="map-header" onclick="toggleMap()">📍 Scene Map</div>
         <div id="map-buttons"></div>
+    </div>
+
+    <!-- Scene Diagram -->
+    <div id="scene-diagram" onclick="this.style.display='none'">
+        <svg id="diagram-svg"></svg>
     </div>
 </div>
 
@@ -215,7 +237,6 @@ let previousScene = null;
 let scenes = {
     start: { name: "Lazo", text: "A Child has reportedly committed an offense. You will now simulate the CICL procedures under RA 9344 & 10630.", bg: "bg_community.png", char: ["narrator.png"], choices: [{ text: "Begin Simulation", next: "leoContact" }] },
     leoContact: { name: "LEO", text: "I approached the child calmly. I must avoid intimidation and introduce myself as Ate/Kuya.", bg: "bg_street_leo.png", char: ["leo.png"], choices: [{ text: "Perform LEO Duties", next: "leoDuties" }] },
-    /* LEO Duties Sequence */
     leoDuties: { name: "LEO", text: "Determine the child's age using one of the following:", bg: "bg_police_station.png", char: ["leo.png"], choices: [
         { text: "Birth Certificate", next: "informParties" }, 
         { text: "Baptismal", next: "informParties" },
@@ -294,131 +315,55 @@ let scenes = {
     ]},
     notGuilty: { name: "Lazo", text: "Case dismissed. The child returns to his/her family and the society.", bg: "bg_community.png", char: ["cicl.png"] },
     guilty: { name: "Judge", text: "Child is found GUILTY. Sentence is suspended. Commitment to Youth Rehabilitation Center.", bg: "bg_court.png", char: ["judge.png"], choices: [
-        { text: "Assess Degree of Change", next: "degreeCheck" },
         { text: "Back", next: "court" }
-    ]},
-    degreeCheck: { name: "Social Worker", text: "Evaluate if the child demonstrates degree of change (disposition).:", bg: "bg_house.png", char: ["socialworker.png"], choices: [
-        { text: "Degree achieved", next: "fulfilled" },
-        { text: "Not achieved", next: "notFulfilled" },
-        { text: "Back", next: "guilty" }
-    ]},
-    fulfilled: { name: "Judge", text: "Degree of change achieved (Fulfilled). Case dismissed. Child reintegrated, no criminal records.", bg: "bg_court.png", char: ["judge.png"] },
-    notFulfilled: { name: "Judge", text: "Degree of change not achieved (Not Fulfilled). Options:", bg: "bg_court.png", char: ["judge.png"], choices: [
-        { text: "Probation", next: "probationEnd" },
-        { text: "Agricultural Penal Farm", next: "continueYRC" },
-        { text: "Back", next: "degreeCheck" }
-    ]},
-    probationEnd: { name: "Lazo", text: "Child is placed on probation and monitored.", bg: "bg_community.png", char: ["narrator.png"] },
-    continueYRC: { name: "Lazo", text: "Child is placed in Agricultural Penal Farm.", bg: "bg_farm.png", char: ["narrator.png"], choices: [
-        { text: "Finish Simulation", next: "simulationEnd" }
-    ]},
-    simulationEnd: { name: "Lazo", text: "You have reached the end of the Simulation. Thank you for participating.", bg: "bg_community.png", char: ["lazo.png"] }
+    ]}
 };
 
-/* START GAME */
+
+/* START GAME WITH COMIC */
 function startGame() {
     document.getElementById("title-screen").classList.add("hidden");
-    startComic();
+    startComicSlideshow(["comic1","comic2","comic3"], "start");
 }
 
-/* COMIC SLIDESHOW */
-let comicIndex = 0;
-function startComic() {
-    const comics = ["comic1","comic2","comic3"];
+/* COMIC SLIDESHOW LOGIC */
+function startComicSlideshow(slides, nextSceneKey){
     const container = document.getElementById("comic-container");
     container.style.display = "flex";
-    showComicSlide(comicIndex);
+    let index = 0;
 
-    container.onclick = () => {
-        comicIndex++;
-        if(comicIndex >= comics.length){
+    function showNext(){
+        if(index>0) document.getElementById(slides[index-1]).classList.remove("show");
+        if(index >= slides.length){
             container.style.display = "none";
-            show("start");
-        } else {
-            showComicSlide(comicIndex);
+            show(nextSceneKey);
+            return;
         }
+        document.getElementById(slides[index]).classList.add("show");
+        index++;
+        setTimeout(showNext, 2000); // 2 seconds per slide
     }
+    showNext();
 }
-
-function showComicSlide(idx){
-    document.querySelectorAll(".comic-slide").forEach(el=>el.classList.remove("show"));
-    document.getElementById(`comic${idx+1}`).classList.add("show");
-}
-
-/* MAP PANEL */
-function toggleMap() {
-    let panel = document.getElementById("map-panel");
-    panel.classList.toggle("open");
-}
-
-function gotoScene(scene) {
-    show(scene);
-    toggleMap(); // close after selection
-}
-
-/* Populate Map Buttons */
-const mapPanel = document.getElementById("map-buttons");
-Object.keys(scenes).forEach(sceneKey => {
-    let btn = document.createElement("div");
-    btn.className = "map-btn";
-    btn.innerText = sceneKey.replace(/([A-Z])/g, ' $1').trim();
-    btn.onclick = () => gotoScene(sceneKey);
-    mapPanel.appendChild(btn);
-});
 
 /* SHOW SCENES */
-function show(scene) {
-    let s = scenes[scene];
-    if (!s) return;
-    previousScene = scene;
+function show(key){
+    previousScene = key;
+    const s = scenes[key];
+    if(!s) return;
+    const container = document.getElementById("game-container");
+    const chars = document.getElementById("characters-container");
+    const dialogBox = document.getElementById("dialogue-box");
+    const nameBox = document.getElementById("name");
+    const textBox = document.getElementById("text");
+    const choicesDiv = document.getElementById("choices");
+    const extraDiv = document.getElementById("extra-buttons");
 
-    let dialog = document.getElementById("dialogue-box");
-
-    // Only show map for dialogue (choices) scenes
-    if(s.choices && s.choices.length>0){
-        document.getElementById("map-panel").style.display="block";
-        document.getElementById("map-panel").classList.remove("open");
-    } else {
-        document.getElementById("map-panel").style.display="none";
-    }
-
-    dialog.classList.remove("visible");
-    setTimeout(()=>{
-        document.getElementById("name").innerText = s.name;
-        document.getElementById("text").innerText = s.text;
-
-        let choicesDiv = document.getElementById("choices");
-        choicesDiv.innerHTML = "";
-        if(s.choices){
-            s.choices.forEach(choice=>{
-                let btn=document.createElement("div");
-                btn.className="choice";
-                btn.innerText = choice.text;
-                btn.onclick = ()=>show(choice.next);
-                choicesDiv.appendChild(btn);
-            });
-        }
-
-        let extra = document.getElementById("extra-buttons");
-        extra.innerHTML="";
-        if(previousScene && previousScene!==scene){
-            let backBtn=document.createElement("div");
-            backBtn.className="extra-btn";
-            backBtn.innerText="Back";
-            backBtn.onclick = ()=>show(previousScene);
-            extra.appendChild(backBtn);
-        }
-
-        dialog.classList.add("visible");
-    },300);
-
-    document.getElementById("game-container").style.backgroundImage=`url(${s.bg})`;
-
-    let chars = document.getElementById("characters-container");
+    container.style.backgroundImage=`url(${s.bg})`;
     chars.innerHTML="";
     if(s.char){
         s.char.forEach((src,i)=>{
-            let img=document.createElement("img");
+            const img = document.createElement("img");
             img.src=src;
             img.className="character-img";
             img.style.left=`${40+i*250}px`;
@@ -426,8 +371,134 @@ function show(scene) {
             setTimeout(()=>img.classList.add("show"),50+i*150);
         });
     }
+
+    nameBox.textContent = s.name;
+    textBox.textContent = s.text;
+
+    choicesDiv.innerHTML="";
+    if(s.choices){
+        s.choices.forEach(c=>{
+            const btn = document.createElement("div");
+            btn.className="choice";
+            btn.textContent = c.text;
+            btn.onclick=()=>show(c.next);
+            choicesDiv.appendChild(btn);
+        });
+    }
+
+    extraDiv.innerHTML="";
+
+    // Back button
+    if(previousScene && previousScene!==key){
+        const backBtn = document.createElement("div");
+        backBtn.className="extra-btn";
+        backBtn.textContent="Back";
+        backBtn.onclick=()=>show(previousScene);
+        extraDiv.appendChild(backBtn);
+    }
+
+    // Scene Diagram button
+    const diagBtn = document.createElement("div");
+    diagBtn.className="extra-btn";
+    diagBtn.textContent="Scene Map";
+    diagBtn.onclick=openSceneDiagram;
+    extraDiv.appendChild(diagBtn);
+
+    dialogBox.classList.add("visible");
+    updateMap();
+}
+
+/* MAP PANEL */
+function toggleMap(){
+    const panel = document.getElementById("map-panel");
+    panel.classList.toggle("open");
+}
+
+function updateMap(){
+    const mapButtons = document.getElementById("map-buttons");
+    mapButtons.innerHTML="";
+    Object.keys(scenes).forEach(key=>{
+        const btn = document.createElement("div");
+        btn.className="map-btn";
+        if(key===previousScene) btn.classList.add("current");
+        btn.textContent=key.replace(/([A-Z])/g,' $1').trim();
+        btn.onclick=()=>show(key);
+        mapButtons.appendChild(btn);
+    });
+}
+
+/* SCENE DIAGRAM */
+function openSceneDiagram(){
+    const container=document.getElementById("scene-diagram");
+    const svg=document.getElementById("diagram-svg");
+    svg.innerHTML="";
+    container.style.display="block";
+
+    const nodeW=140, nodeH=50, xSpacing=220, ySpacing=80;
+    const depths={}, visited=new Set();
+    const queue=[{key:"start", depth:0}];
+    while(queue.length>0){
+        const {key, depth}=queue.shift();
+        if(visited.has(key)) continue;
+        visited.add(key);
+        depths[key]=depth;
+        const scene=scenes[key];
+        if(scene && scene.choices){
+            scene.choices.forEach(c=>{
+                if(!visited.has(c.next)) queue.push({key:c.next, depth:depth+1});
+            });
+        }
+    }
+
+    const groups={};
+    Object.keys(depths).forEach(k=>{
+        const d=depths[k];
+        if(!groups[d]) groups[d]=[];
+        groups[d].push(k);
+    });
+
+    const positions={};
+    Object.keys(groups).forEach(depth=>{
+        const keys=groups[depth];
+        keys.forEach((k,i)=>positions[k]={x:depth*xSpacing+50, y:i*ySpacing+50});
+    });
+
+    // Draw edges
+    Object.keys(scenes).forEach(sceneKey=>{
+        const scene=scenes[sceneKey];
+        if(scene.choices){
+            scene.choices.forEach(c=>{
+                const nextKey=c.next;
+                if(positions[sceneKey] && positions[nextKey]){
+                    const x1=positions[sceneKey].x+nodeW, y1=positions[sceneKey].y+nodeH/2;
+                    const x2=positions[nextKey].x, y2=positions[nextKey].y+nodeH/2;
+                    const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+                    line.setAttribute("x1",x1); line.setAttribute("y1",y1);
+                    line.setAttribute("x2",x2); line.setAttribute("y2",y2);
+                    line.setAttribute("stroke","#fff"); line.setAttribute("stroke-width","2");
+                    svg.appendChild(line);
+                }
+            });
+        }
+    });
+
+    // Draw nodes
+    Object.keys(positions).forEach(k=>{
+        const pos=positions[k];
+        const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+        rect.setAttribute("x",pos.x); rect.setAttribute("y",pos.y);
+        rect.setAttribute("width",nodeW); rect.setAttribute("height",nodeH);
+        rect.setAttribute("rx","8"); rect.classList.add("scene-node");
+        rect.onclick=()=>{ show(k); container.style.display="none"; };
+        svg.appendChild(rect);
+
+        const label=document.createElementNS("http://www.w3.org/2000/svg","text");
+        label.setAttribute("x", pos.x+nodeW/2); label.setAttribute("y", pos.y+nodeH/2+5);
+        label.setAttribute("text-anchor","middle"); label.classList.add("scene-label");
+        label.textContent=k.replace(/([A-Z])/g,' $1').trim();
+        svg.appendChild(label);
+    });
 }
 </script>
-
 </body>
 </html>
